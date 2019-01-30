@@ -68,9 +68,12 @@ class PostCreationTest extends TestCase
         $response->assertStatus(200);
         // verifica presenza post con $attributes in storage
         $this->assertDatabaseHas('posts', $attributes);
-        asser redirect su route('posts.show')
     }
 
 
-    // post has required fields
+    /** @test */
+    public function post_has_required_fields()
+    {
+        // @TODO - assertSessionHasErrors
+    }
 }
