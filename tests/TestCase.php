@@ -18,7 +18,7 @@ abstract class TestCase extends BaseTestCase
         $this->withoutExceptionHandling();
     }
 
-    protected function signIn($user = null)
+    protected function signIn(User $user = null)
     {
         $this->be($user ?? factory(User::class)->create());
 

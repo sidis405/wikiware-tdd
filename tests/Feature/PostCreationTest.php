@@ -58,7 +58,7 @@ class PostCreationTest extends TestCase
         $attributes = [
             'title' => 'Titolo test',
             'slug' => 'slug',
-            'preview' => 'Lorem ipsum',
+            'preview' => 'preview',
         ];
 
         // act
@@ -74,6 +74,13 @@ class PostCreationTest extends TestCase
     /** @test */
     public function post_has_required_fields()
     {
-        // @TODO - assertSessionHasErrors
+        // arrange
+        $this->signIn()->withExceptionHandling();
+
+        // act
+        $response = $this->post(route('posts.store'), []);
+
+        // assert
+        $response->assertSessionHasErrors(['title']);
     }
 }

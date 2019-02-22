@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use Illuminate\Http\Request;
+use App\Events\PostWasUpdated;
+use App\Http\Requests\PostRequest;
 
 class PostsController extends Controller
 {
@@ -24,8 +26,34 @@ class PostsController extends Controller
         return view('posts.create');
     }
 
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
         $post = auth()->user()->posts()->create($request->only('title', 'slug', 'preview'));
+    }
+
+    public function edit(Post $post)
+    {
+        if (auth()->id() !== $post->user_id) {
+            abort(403);
+        }
+    }
+
+    public function update(Post $post, Request $request)
+    {
+        if (auth()->id() !== $post->user_id) {
+            abort(403);
+        }
+
+        $request->validate([
+            'title' => 'required'
+        ]);
+
+        $post->update([
+            'title' => $request->title
+        ]);
+
+        event(new PostWasUpdated($post));
+
+        return redirect()->route('posts.edit', $post);
     }
 }
